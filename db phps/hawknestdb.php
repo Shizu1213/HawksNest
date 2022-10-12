@@ -1,6 +1,5 @@
 <?php
     class Database {
-        //testingdffsdsdfdf
         const HOST =  'localhost';
         const PORT =  '3306';
         const USERNAME =  'NakamaGames';

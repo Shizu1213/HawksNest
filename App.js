@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexWrap: 'wrap',
     flexDirection: 'row',
-    backgroundColor: 'black'
+    backgroundColor: 'cyan'
   },
   card: {
     width: 50,

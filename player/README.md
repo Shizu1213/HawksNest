@@ -1,0 +1,1 @@
+This is the Folder which contains the Javascript, html and css that the game will run on.

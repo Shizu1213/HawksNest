@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
+import map_entrance from './screens/map_entrance_v1.jpg';
 import './App.css';
-import map_entrance from './screens/map_entrance_v1.jpg'
 
 export default function App() {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -43,8 +43,9 @@ export default function App() {
 
 
   return (
-    <div className="App" onMouseMove={handleMouseMove} style={{ backgroundImage: `url(${map_entrance})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }} >
+    <div className='App' onMouseMove={handleMouseMove} style={{ backgroundImage: `url(${map_entrance})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }} >
       {coords.x} {coords.y}
+
       <div className="Person" style={{ left: playerCoords.x, top: playerCoords.y }}></div>
     </div>
   );

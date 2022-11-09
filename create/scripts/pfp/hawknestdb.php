@@ -36,16 +36,13 @@
 
         $statement = $this->db('INSERT INTO users (username, email, password') VALUES (?, ?, ?);
         $statement->bind_param('sss', $username, $password, $email);
-
         if (!$statement->execute()) {
             $this->dieMessage('username, Oops! An error occured. Try Again Later');
         }
-
             $this->dieMessage('Account Created!', true);
         
         function hashpassword($password) {
             $password = password_hash($password, PASSWORD_BCRYPT);
-
             return str_replace('$2y$', '$2a$', $password);
         }
 

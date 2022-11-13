@@ -8,7 +8,7 @@ import './App.css';
 
 export default function App() {
   const [backgroundImage, setBackGroundImage] = useState(`url(${map_entrance})`)
-
+  
   return (
     <MapEntrance area= {backgroundImage} />
   );

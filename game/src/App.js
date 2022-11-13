@@ -10,7 +10,7 @@ export default function App() {
   const [backgroundImage, setBackGroundImage] = useState(`url(${map_entrance})`)
   
   return (
-    <MapEntrance area= {backgroundImage} />
+    <MapEntrance area= {backgroundImage} changeArea= {setBackGroundImage}/>
   );
 }
 

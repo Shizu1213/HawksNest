@@ -87,11 +87,23 @@ export default function App(props) {
         });
     };
 
-    //Mouse Movement
-    const moveCharacter = () => {
-        setPlayerCoords({ x: globalCoords.x - 720, y: globalCoords.y - 600 })
-        setIsMoving(false)
+    //Area Change Handler
+    const checkAreaChange = () => {
+        switch(props.area){
+            case `url(${map_entrance})`:
+                if(playerCoords.x == 1225){
+                    props.changeArea(`url(${star_bucks})`)
+                    setPlayerCoords({x: 5, y: playerCoords.y})
+                }
+                break;
+            case `url(${star_bucks})`:
+                if(playerCoords.x == 0){
+                    props.changeArea(`url(${map_entrance})`)
+                    setPlayerCoords({x: 1220, y: playerCoords.y})
+                }
+        }
     }
+    
     //Keyboard Movement
     const horrizontalMovement = () => {
         if(isMovingLeft){
@@ -103,6 +115,7 @@ export default function App(props) {
             setIsMovingRight(false)
         }
         setIsMovingHorizontally(false)
+        checkAreaChange()
         return playerCoords.x
     }
     const verticalMovement = () => {
@@ -120,7 +133,7 @@ export default function App(props) {
     
     return (
         <div className='App' onClick={() => setIsMoving(true)} onMouseMove={handleMouseMove} style={{ backgroundImage: props.area, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }} >
-            {coords.x} {coords.y} {isMovingLeft.toString()}
+            {playerCoords.x} {playerCoords.y} 
             <motion.img
                 src={person}
                 initial={{ left: playerCoords.x, top: playerCoords.y }}

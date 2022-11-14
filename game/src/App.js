@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import map_entrance from './screens/map_entrance_v1.jpg';
+import map_entrance from './screens/map_entrance_v1.png';
 import star_bucks from './screens/star_bucks_v1.png';
 
 import MapEntrance from './Components/MapEntrance';

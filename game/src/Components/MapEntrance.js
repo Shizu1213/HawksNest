@@ -18,7 +18,7 @@ export default function App(props) {
     const [coords, setCoords] = useState({ x: 0, y: 0 });
     const [globalCoords, setGlobalCoords] = useState({ x: 0, y: 0 });
     const [playerCoords, setPlayerCoords] = useState({ x: 600, y: 480 });
-   
+
     const [playerImage, setPlayerImage] = useState(person);
 
     const [isSprinting, setIsSprinting] = useState(false)
@@ -30,7 +30,7 @@ export default function App(props) {
     const [isMovingRight, setIsMovingRight] = useState(false);
     const [isMovingUp, setIsMovingUp] = useState(false);
     const [isMovingDown, setIsMovingDown] = useState(false);
- 
+
     //Set up Game Coordinates
     useEffect(() => {
         // get global mouse coordinates
@@ -43,7 +43,7 @@ export default function App(props) {
         //Managing movement state on key up and key down
         //Key Down
         const handleMovementState = event => {
-            switch(event.keyCode){
+            switch (event.keyCode) {
                 case 37:
                     setIsMovingLeft(true)
                     setIsMovingHorizontally(true)
@@ -64,11 +64,11 @@ export default function App(props) {
                     setIsSprinting(true)
                     break;
             }
-            
+
         }
         //Key up
         const handleKeyRelease = event => {
-            switch(event.keyCode){
+            switch (event.keyCode) {
                 case 37:
                     setIsMovingLeft(false)
                     setIsMovingHorizontally(false)
@@ -112,40 +112,40 @@ export default function App(props) {
 
     //Area Change Handler
     const checkAreaChange = () => {
-        switch(props.area){
+        switch (props.area) {
             case `url(${map_entrance})`:
-                if(playerCoords.x >= 1220){
+                if (playerCoords.x >= 1220) {
                     props.changeArea(`url(${star_bucks})`)
-                    setPlayerCoords({x: 5, y: playerCoords.y})
+                    setPlayerCoords({ x: 5, y: playerCoords.y })
                 }
                 break;
             case `url(${star_bucks})`:
-                if(playerCoords.x <= 0){
+                if (playerCoords.x <= 0) {
                     props.changeArea(`url(${map_entrance})`)
-                    setPlayerCoords({x: 1215, y: playerCoords.y})
+                    setPlayerCoords({ x: 1215, y: playerCoords.y })
                 }
                 break;
         }
     }
     //Wall Handler
     const checkWall = () => {
-        switch(props.area){
+        switch (props.area) {
             case `url(${map_entrance})`:
         }
     }
-    
+
     //Keyboard Movement
     const horrizontalMovement = () => {
-        if(isMovingLeft){
-            if(playerImage == left_a) setPlayerImage(left_b)
+        if (isMovingLeft) {
+            if (playerImage == left_a) setPlayerImage(left_b)
             else setPlayerImage(left_a)
-            setPlayerCoords({ x: isSprinting? playerCoords.x - 10 : playerCoords.x -5, y: playerCoords.y})
+            setPlayerCoords({ x: isSprinting ? playerCoords.x - 10 : playerCoords.x - 5, y: playerCoords.y })
             setIsMovingLeft(false)
         }
-        if(isMovingRight){
-            if(playerImage == right_a) setPlayerImage(right_b)
+        if (isMovingRight) {
+            if (playerImage == right_a) setPlayerImage(right_b)
             else setPlayerImage(right_a)
-            setPlayerCoords({ x: isSprinting? playerCoords.x + 10 : playerCoords.x + 5, y: playerCoords.y})
+            setPlayerCoords({ x: isSprinting ? playerCoords.x + 10 : playerCoords.x + 5, y: playerCoords.y })
             setIsMovingRight(false)
         }
         setIsMovingHorizontally(false)
@@ -153,28 +153,28 @@ export default function App(props) {
         return playerCoords.x
     }
     const verticalMovement = () => {
-        if(isMovingUp){
-            setPlayerCoords({ x: playerCoords.x, y: isSprinting ? playerCoords.y - 10 : playerCoords.y - 5})
+        if (isMovingUp) {
+            setPlayerCoords({ x: playerCoords.x, y: isSprinting ? playerCoords.y - 10 : playerCoords.y - 5 })
             setIsMovingUp(false)
         }
-        if(isMovingDown){
-            if(playerImage == down_a) setPlayerImage(down_b)
+        if (isMovingDown) {
+            if (playerImage == down_a) setPlayerImage(down_b)
             else setPlayerImage(down_a)
-            setPlayerCoords({ x: playerCoords.x, y: isSprinting ? playerCoords.y + 10 : playerCoords.y + 5})
+            setPlayerCoords({ x: playerCoords.x, y: isSprinting ? playerCoords.y + 10 : playerCoords.y + 5 })
             setIsMovingDown(false)
         }
         setIsMovingVertically(false)
         return playerCoords.y
     }
-    
+
     return (
-        <div className='App' style={{ backgroundImage: props.area, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }} >
-            {playerCoords.x} {playerCoords.y} 
+        <div className='PlayerView' style={{ backgroundImage: props.area, backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}>
+            {playerCoords.x} {playerCoords.y}
             <motion.img
                 src={playerImage}
-                initial={{ left: playerCoords.x, top: playerCoords.y}}
-                animate={{ left: isMovingHorizontally ? horrizontalMovement() : playerCoords.x, top: isMovingVertically ? verticalMovement() : playerCoords.y}}
-                transition={{ duration: .01, type: "keyframes" }} 
+                initial={{ left: playerCoords.x, top: playerCoords.y }}
+                animate={{ left: isMovingHorizontally ? horrizontalMovement() : playerCoords.x, top: isMovingVertically ? verticalMovement() : playerCoords.y }}
+                transition={{ duration: .01, type: "keyframes" }}
                 style={{ position: 'absolute', width: 60, height: 80 }}>
             </motion.img>
         </div>

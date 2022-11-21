@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import map_entrance from '../screens/map_entrance_v1.png';
+import map_entrance from '../screens/map_entrance_v3.png';
 import star_bucks from '../screens/star_bucks_v1.png';
 
 import person from '../images/normal.png';
 import down_a from '../images/down_a.png';
 import down_b from '../images/down_b.png';
+
 import left_a from '../images/left_a.png';
 import left_b from '../images/left_b.png';
+import left_c from '../images/left_c.png';
+
 import right_a from '../images/right_a.png';
 import right_b from '../images/right_b.png';
 
@@ -17,7 +20,8 @@ export default function App(props) {
     //Game State
     const [coords, setCoords] = useState({ x: 0, y: 0 });
     const [globalCoords, setGlobalCoords] = useState({ x: 0, y: 0 });
-    const [playerCoords, setPlayerCoords] = useState({ x: 600, y: 480 });
+
+    const [playerCoords, setPlayerCoords] = useState({ x: 25, y: 25 });
 
     const [playerImage, setPlayerImage] = useState(person);
     const [playerMessage, setPlayerMessage] = useState("Hello World the earth is flat and Bitcoin should be legal tender and");
@@ -33,8 +37,16 @@ export default function App(props) {
     const [isMovingUp, setIsMovingUp] = useState(false);
     const [isMovingDown, setIsMovingDown] = useState(false);
 
+    const [mapEntranceWalls, setEntranceWalls] = useState([{ x: 0, y: 0 }]);
+
     //Set up Game 
     useEffect(() => {
+        //Define Walls for main entrance
+        for(let x = 0; x < 990; x = x + 5){
+            mapEntranceWalls.push({x: x, y: 510})
+        }
+
+
         // get global mouse coordinates
         const handleWindowMouseMove = event => {
             setGlobalCoords({
@@ -66,7 +78,7 @@ export default function App(props) {
                     setIsSprinting(true)
                     break;
                 default:
-                   break;
+                    break;
             }
 
         }
@@ -122,7 +134,7 @@ export default function App(props) {
     const checkAreaChange = () => {
         switch (props.area) {
             case `url(${map_entrance})`:
-                if (playerCoords.x >= 990) {
+                if (playerCoords.x >= 1480) {
                     props.changeArea(`url(${star_bucks})`)
                     setPlayerCoords({ x: 5, y: playerCoords.y })
                 }
@@ -130,36 +142,37 @@ export default function App(props) {
             case `url(${star_bucks})`:
                 if (playerCoords.x < 0) {
                     props.changeArea(`url(${map_entrance})`)
-                    setPlayerCoords({ x: 985, y: playerCoords.y })
+                    setPlayerCoords({ x: 1475, y: playerCoords.y })
                 }
                 break;
         }
-    }
-    //Define Walls for main entrance
-    const mapEntranceWalls = () => {
-        //Game Borders
-        if (playerCoords.x < 0) setPlayerCoords({ x: 5, y: playerCoords.y })
-        if (playerCoords.y > 510) setPlayerCoords({ x: playerCoords.x, y: 505 })
-
-        //Top left walls
-        if (playerCoords.y < 255 && playerCoords.x < 245) setPlayerCoords({ x: playerCoords.x, y: playerCoords.y + 10 })
-
     }
 
     //Wall Handler
     const checkWallCollision = () => {
         switch (props.area) {
             case `url(${map_entrance})`:
-                mapEntranceWalls()
-            default:
-                return false;
+                mapEntranceWalls.forEach(wall => {
+                    if(playerCoords.x == wall.x && playerCoords.y== wall.y)  setWallCollision(true);
+
+                })
+            
         }
+    }
+    const mapEntranceCollisionHandler = () => {
+
+        //Top left walls
+        //if (playerCoords.y < 255 && playerCoords.x < 245) setPlayerCoords({ x: playerCoords.x, y: playerCoords.y + 10 })
+        
     }
     //Keyboard Movement
     const horrizontalMovement = () => {
+        const ogPos = playerCoords;
         if (isMovingLeft) {
             if (playerImage == left_a) setPlayerImage(left_b)
+            else if (playerImage == left_b) setPlayerImage(left_c)
             else setPlayerImage(left_a)
+
             setPlayerCoords({ x: isSprinting ? playerCoords.x - 10 : playerCoords.x - 5, y: playerCoords.y })
             setIsMovingLeft(false)
         }
@@ -171,12 +184,18 @@ export default function App(props) {
         }
         setIsMovingHorizontally(false)
         checkAreaChange()
-        checkWallCollision()
-        //Check Game borders
+
+        //Check Game Walls
+        checkWallCollision();
+        if(wallCollision == true) {
+            setPlayerCoords(ogPos);
+            setWallCollision = false;
+        }
 
         return playerCoords.x
     }
     const verticalMovement = () => {
+        const ogPos = playerCoords;
         if (isMovingUp) {
             setPlayerCoords({ x: playerCoords.x, y: isSprinting ? playerCoords.y - 10 : playerCoords.y - 5 })
             setIsMovingUp(false)
@@ -190,31 +209,40 @@ export default function App(props) {
 
         setIsMovingVertically(false)
         checkAreaChange()
+        //Check Game Walls
         checkWallCollision()
+        if(wallCollision == true) {
+            setPlayerCoords(ogPos);
+            setWallCollision = false;
+        }
         return playerCoords.y
     }
     //Textbox Component for writing messages
     const TextBox = () => {
         return (<form className='TextBox' >
-            <input type="text" onChange={(e) => {setPlayerMessage(e.target.value)}} value={playerMessage} style={{ backgroundColor: 'transparent', color: 'yellow', borderRadius: 20, width: '98%', height: '75%', borderColor: 'blue', position: 'relative' }}></input>
+            <input type="text" onChange={(e) => { setPlayerMessage(e.target.value) }} value={playerMessage} style={{ backgroundColor: 'transparent', color: 'yellow', borderRadius: 20, width: '98%', height: '75%', borderColor: 'blue', position: 'relative' }}></input>
         </form>)
     }
     const Player = () => {
         return (<div>
             <motion.img
                 src={playerImage}
-                initial={{ left: playerCoords.x, top: playerCoords.y }}
-                animate={{ left: isMovingHorizontally ? horrizontalMovement() : playerCoords.x, top: isMovingVertically ? verticalMovement() : playerCoords.y }}
+                initial={{ marginLeft: playerCoords.x, marginTop: playerCoords.y }}
+                animate={{ marginLeft: isMovingHorizontally ? horrizontalMovement() : playerCoords.x, marginTop: isMovingVertically ? verticalMovement() : playerCoords.y }}
                 transition={{ duration: .01, type: "keyframes" }}
-                style={{ position: 'absolute', width: 60, height: 80, outline: '1px solid black' }}>
+                style={{ position: 'relative', width: 60, height: 80, outline: '1px solid black' }}>
             </motion.img>
             <motion.div className='PlayerMessage' style={{ left: playerCoords.x - 40, top: playerCoords.y - 55 }}>{playerMessage}</motion.div>
         </div>)
+    }
+    const Wall = (props) => {
+        return(<div style={{ position: 'absolute', left: props.x + 60, top: props.y + 80, width: 5, height: 5, backgroundColor: 'yellow'}}></div>)
     }
 
     return (
         <div className='GameView' style={{ backgroundImage: props.area, backgroundRepeat: 'no-repeat', backgroundSize: 'contain' }}>
             {playerCoords.x} {playerCoords.y}
+
             <Player />
             <TextBox />
         </div>
